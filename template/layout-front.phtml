@@ -1,0 +1,402 @@
+<?php
+// Set doctype explicitly if it is not `HTML4_LOOSE`, i.e. 'HTML 4.01 Transitional'
+$this->doctype('HTML5');
+
+// Load translation data
+$this->i18nTheme();
+
+//HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+$this->js(array(
+    pi::url('static/js/html5shiv.js') => array(
+        'conditional' => 'lt IE 9'
+    ),
+    pi::url('static/js/respond.min.js') => array(
+        'conditional' => 'lt IE 9'
+    ),
+));
+
+// Load jQuery
+$this->jquery();
+
+// Load Bootstrap css/js and font-awesome
+$this->bootstrap(array(
+    'js/bootstrap.min.js',
+    'font-awesome/css/font-awesome.min.css'
+));
+
+// Load front.css
+$this->css(array(
+    $this->assetTheme('css/front.css'),
+    //$this->assetTheme('css/material.min.css'),
+    //$this->assetTheme('css/animate.css')
+));
+
+// Load localization css
+$this->css($this->assetLocale('locale.css'));
+
+// Load js footer
+//$this->footScript()->appendFile($this->assetTheme('js/jquery.easing.min.js'));
+//$this->footScript()->appendFile($this->assetTheme('js/jquery.inview.min.js'));
+$this->footScript()->appendFile($this->assetTheme('js/front.js'));
+
+// Apple icons
+// Apple icon for iphone
+$this->headLink(array(
+    'rel'   => 'apple-touch-icon',
+    'href'  => $this->assetTheme('image/touch-icon-iphone.png')
+));
+// Apple icon for ipad
+$this->headLink(array(
+    'rel'   => 'apple-touch-icon',
+    'sizes' => '72x72',
+    'href'  => $this->assetTheme('image/touch-icon-ipad.png')
+));
+// Apple icon for iphone retina
+$this->headLink(array(
+    'rel'   => 'apple-touch-icon',
+    'sizes' => '114x114',
+    'href'  => $this->assetTheme('image/touch-icon-iphone-retina.png')
+));
+// Apple icon for ipad retina
+$this->headLink(array(
+    'rel'   => 'apple-touch-icon',
+    'sizes' => '114x114',
+    'href'  => $this->assetTheme('image/touch-icon-ipad-retina.png')
+));
+
+// Meta Viewport Tag
+$this->headMeta('width=device-width, initial-scale=1.0', 'viewport');
+
+// Explicitly load favicon
+$this->headLink(array(
+    'rel'   => 'shortcut icon',
+    'href'  => $this->favicon(),
+));
+
+// Load google analytics code
+$this->ga();
+
+// Get module name
+$module = Pi::service('module')->current();
+
+// Get navigation
+$navigation = $this->nav('front');
+
+// Get block
+$blocks = $this->blocks();
+$blockTemplate = $this->template('block');
+
+// Get breadcrumbs
+$breadcrumbs = $this->breadcrumb(array('prefix' => array(array('label' => __('Home'), 'href' => $this->url('home')))));
+?>
+<!DOCTYPE HTML>
+<html lang="<?php echo $locale; ?>">
+<head>
+    <meta charset="<?php echo $charset; ?>">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+</head>
+<body id="pi-<?php echo $module; ?>" class="pi-locale-<?php echo $locale; ?>">
+<header class="pi-header">
+    <div class="pi-header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="pi-social">
+                        <ul class="list-inline">
+                            <li id="pi-social-twitter">
+                                <a title="آکادمی فانتزی در تویتر" href="https://twitter.com/fantasydotir"><i class="fa fa-twitter-square"></i></a>
+                            </li>
+                            <li id="pi-social-facebook">
+                                <a title="آکادمی فانتزی در فیسبوک" href="https://www.facebook.com/Fantasy.Academy"><i class="fa fa-facebook-square"></i></a>
+                            </li>
+                            <li id="pi-social-google">
+                                <a title="آکادمی فانتزی در گوگل پلاس" href="https://plus.google.com/u/0/107218938770448939279"><i class="fa fa-google-plus-square"></i></a>
+                            </li>
+                            <li id="pi-social-rss">
+                                <a title="خوراک" href="http://www.fantasy.ir/feed/news/"><i class="fa fa-rss-square"></i></a>
+                            </li>
+                            <li id="pi-social-newsletter">
+                                <a title="عضویت در خبرنامه آکادمی فانتزی" href="http://www.fantasy.ir/page/newsletter/"><i class="fa fa-envelope"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="pi-header-search">
+                        <form method="post" action="http://www.fantasy.ir/news/filter" target="_self">
+                            <div class="input-group">
+                                <input class="form-control" name="title" placeholder="جستجو" type="text">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pi-header-menu">
+        <div class="container">
+            <div class="row">
+                <nav class="navbar navbar-inverse navbar-expanded" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar-collapse-1">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <a title="<?php echo _escape($sitename); ?>" class="pi-header-logo navbar-brand" href="http://www.fantasy.ir">
+                                <img src="<?php echo $this->assetTheme('image/logo.png'); ?>" class="img-responsive" alt="<?php echo _escape($sitename); ?>">
+                            </a>
+                            <div class="pi-header-title">
+                                <?php if ($module == 'system') { ?>
+                                    <h1>
+                                        <a title="<?php echo _escape($sitename); ?>" href="http://www.fantasy.ir">
+                                            <?php echo _escape($sitename); ?>
+                                        </a>
+                                    </h1>
+                                <?php } else { ?>
+                                    <h2>
+                                        <a title="<?php echo _escape($sitename); ?>" href="http://www.fantasy.ir">
+                                            <?php echo _escape($sitename); ?>
+                                        </a>
+                                    </h2>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                            <ul class="nav navbar-nav pi-navbar-nav">
+                                <li class="dropdown">
+                                    <a itemprop="url" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span itemprop="name">داستان</span> <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a itemprop="url" title="فانتزی" href="http://www.fantasy.ir/news/topic/fantasy">
+                                                <span itemprop="name">فانتزی</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a itemprop="url" title="علمی تخیلی" href="http://www.fantasy.ir/news/topic/science-fiction">
+                                                <span itemprop="name">علمی تخیلی</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a itemprop="url" title="وحشت" href="http://www.fantasy.ir/news/topic/horror">
+                                                <span itemprop="name">وحشت</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a itemprop="url" title="مقاله" href="http://www.fantasy.ir/news/topic/article">
+                                        <span itemprop="name">مقاله</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a itemprop="url" title="پیشنهاد" href="http://www.fantasy.ir/news/topic/suggestion">
+                                        <span itemprop="name">پیشنهاد</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a itemprop="url" title="خبر" href="http://www.fantasy.ir/news/topic/news">
+                                        <span itemprop="name">خبر</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a itemprop="url" title="پرونده" href="http://www.fantasy.ir/news/topic/case">
+                                        <span itemprop="name">پرونده</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right pi-navbar-nav">
+                                <li>
+                                    <a itemprop="url" title="آرشیو ماهنامه‌ی شگفتزار" href="http://www.fantasy.ir/news/topic/magazine">
+                                        <span itemprop="name">آرشیو ماهنامه‌ی شگفتزار</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a itemprop="url" title="نویسندگان" href="http://www.fantasy.ir/news/author">
+                                        <span itemprop="name">نویسندگان</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="pi-section">
+    <div class="<?php if ($module == 'system') { echo 'pi-system-container'; } else { echo 'pi-module-container'; } ?>" >
+        <div class="<?php if ($module == 'system') { echo 'container-fluid'; } else { echo 'container'; } ?>">
+            <div class="<?php if (isset($blocks['8'])) { ?>col-md-9<?php } else { ?>clearfix<?php } ?>">
+                <?php if ($breadcrumbs) { echo $breadcrumbs; } ?>
+                <?php include $this->template('flash-messenger'); ?>
+                <?php if (!empty($blocks['0'])) { ?>
+                    <div class="pi-zone-0">
+                        <?php foreach ($blocks['0'] as $block) {
+                            include $blockTemplate;
+                        } ?>
+                    </div>
+                <?php } ?>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row top-blocks">
+                            <?php if (isset($blocks['2'])) { ?>
+                                <div class="pi-zone-2 col-md-9">
+                                    <?php foreach ($blocks['2'] as $block) {
+                                        include $blockTemplate;
+                                    } ?>
+                                </div>
+                            <?php } ?>
+                            <?php if (!empty($blocks['1'])) { ?>
+                                <div class="pi-zone-1 col-md-3">
+                                    <?php foreach ($blocks['1'] as $block) {
+                                        include $blockTemplate;
+                                    } ?>
+                                </div>
+                            <?php } ?>
+                        </div>
+
+                        <?php if (isset($blocks['3']) || isset($blocks['4'])) { ?>
+                            <div class="row">
+                                <div class="col-md-6 pi-zone-3">
+                                    <?php
+                                    if (isset($blocks['3'])) {
+                                        foreach ($blocks['3'] as $block) {
+                                            include $blockTemplate;
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                                <div class="col-md-6 pi-zone-4">
+                                    <?php
+                                    if (isset($blocks['4'])) {
+                                        foreach ($blocks['4'] as $block) {
+                                            include $blockTemplate;
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php if (!empty($content)) { ?>
+                            <div class="<?php echo $module; ?>">
+                                <div class="pi-module-content" ng-app="<?php echo $module; ?>">
+                                    <?php echo $content; ?>
+                                </div>
+                                <?php echo Pi::service('comment')->load(array('options' => array('type' => 'js'))); ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (isset($blocks['5']) || isset($blocks['6'])) { ?>
+                            <div class="row">
+                                <div class="col-md-6 pi-zone-5">
+                                    <?php
+                                    if (isset($blocks['5'])) {
+                                        foreach ($blocks['5'] as $block) {
+                                            include $blockTemplate;
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                                <div class="col-md-6 pi-zone-6">
+                                    <?php
+                                    if (isset($blocks['6'])) {
+                                        foreach ($blocks['6'] as $block) {
+                                            include $blockTemplate;
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php if (isset($blocks['7'])) { ?>
+                            <div class="pi-zone-7">
+                                <?php foreach ($blocks['7'] as $block) {
+                                    include $blockTemplate;
+                                } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                </div>
+                <?php if (isset($blocks['99'])) { ?>
+                    <div class="pi-zone-99">
+                        <?php foreach ($blocks['99'] as $block) {
+                            include $blockTemplate;
+                        } ?>
+                    </div>
+                <?php } ?>
+            </div>
+            <?php if (isset($blocks['8'])) { ?>
+                <div class="col-md-3">
+                    <div class="pi-zone-8">
+                        <?php foreach ($blocks['8'] as $block) {
+                            include $blockTemplate;
+                        } ?>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</section>
+<footer class="pi-footer">
+    <div class="pi-footer-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>کلیه‌ی حقوق نشر مطالب این‌ وب‌گاه محفوظ بوده و نشر مجدد محتوای نگارش و برگردان وب‌گاه تنها با اجازه‌ی کتبی و یا بر اساس اجازه‌نامه‌ها و مجوزها مجاز است. نادیده گرفتن این حقوق مالکیت معنوی بر اساس قوانین مؤلفین و مصنفین قابل پیگرد قانونی است.</p>
+                </div>
+                <div class="col-md-12">
+                    <ul class="list-inline">
+                        <li><a href="http://www.fantasy.ir/page/statute/">اساس‌نامه‌</a></li>
+                        <li><a href="http://www.fantasy.ir/page/licensing-and-permissions/">اجازه‌نامه و مجوزها</a></li>
+                        <li><a href="http://www.fantasy.ir/page/cooperation-with-us/">همکاری با ما</a></li>
+                        <li><a href="http://www.fantasy.ir/page/newsletter/">عضویت در خبرنامه</a></li>
+                        <li><a href="http://www.fantasy.ir/page/about-us/">درباره ما</a></li>
+                        <li><a href="http://www.fantasy.ir/contact">تماس با ما</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pi-footer-copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 text-left"> <a title="آکادمی فانتزی" href="http://www.fantasy.ir/"> آکادمی فانتزی </a> ، رسانه‌ی گروه ادبیات گمانه‌زن</div>
+                <div class="col-md-4 text-right">طراحی و توسعه <a title="فراگسترش" href="http://www.faragostaresh.com">فراگسترش</a></div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "http://www.fantasy.ir",
+    "name" : "شگفتزار",
+    "alternateName" : "وب‌سایتِ مجله‌ی «شگفت‌زار» ماهنامه‌ی برخطِ گروه ادبیاتِ گمانه‌زن که شامل داستان، مقاله،خبر است",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "http://www.fantasy.ir/news/?title={search_term_string}",
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context" : "http://schema.org",
+    "@type" : "Organization",
+    "name" : "شگفتزار",
+    "logo" : "http://www.fantasy.ir/asset/theme-fantasy/image/logo.png",
+    "url" : "https://www.fantasy.ir",
+    "sameAs" : [
+        "https://www.twitter.com/fantasydotir",
+        "https://www.facebook.com/Fantasy.Academy"
+    ]
+}
+</script>
+</body>
+</html>
